@@ -14,7 +14,8 @@ import java.util.Map.*;
 public class keatingSDLCAssignment {
 	
 	static TreeMap<String, Integer> freq = new TreeMap<>();
-	static Map<String, Integer> sortedMap = valueSort(freq);
+	private static DefaultListModel<String> textFeild;
+	private static DefaultTableModel defaultModel;
 	
 	 public static <K, V extends Comparable<V> > Map<K, V> //Sorts the TreeMap
 	    valueSort(final Map<K, V> map)
@@ -49,21 +50,17 @@ public class keatingSDLCAssignment {
 			JPanel occurances = new JPanel();
 			
 			String[] columns = new String[] {"Word", "Number"}; //So I can put treemap into the UI
-			DefaultTableModel defaultModel = new DefaultTableModel(columns, 0);
+			defaultModel = new DefaultTableModel(columns, 0);
 			
-			Set<Entry<String, Integer>> entries = sortedMap.entrySet();
 			
-			for(Entry<String, Integer> entry:entries) {
-				defaultModel.addRow(new Object[] {entry.getKey(), entry.getValue()});
-			}
 			
-			JTable myTable = new JTable(defaultModel);
-			JScrollPane scrollPane = new JScrollPane();
+			JTable myTable = new JTable(defaultModel); //Will be where the data goes
+			JScrollPane scrollPane = new JScrollPane(); //User can scroll through the list
 			scrollPane.setViewportView(myTable);
 			occurances.add(scrollPane);
 			frame.add(occurances);
 			
-			JPanel buttonPanel = new JPanel();
+			JPanel buttonPanel = new JPanel(); //Click this and data fill into table
 			buttonPanel.add(new JLabel());
 			JButton display = new JButton("Display words");
 			display.addActionListener(displayListener());
@@ -101,6 +98,7 @@ public class keatingSDLCAssignment {
 			                    freq.computeIfAbsent(word, (w) -> Integer.valueOf(1));
 			                }
 			            }
+			    		
 			            // Calling the method valueSort
 			            Map sortedMap = valueSort(freq);
 			      
@@ -112,11 +110,12 @@ public class keatingSDLCAssignment {
 			      
 			            // Display elements
 			           while (i.hasNext()) {
-			                
-			                Map.Entry mp = (Map.Entry)i.next();
-			                System.out.print(mp.getKey() + ": ");
-			                System.out.println(mp.getValue());
-			                
+			        	   Set<Entry<String, Integer>> entries = sortedMap.entrySet();
+			   			
+			   			for(Entry<String, Integer> entry:entries) {
+			   				defaultModel.addRow(new Object[] {entry.getKey(), entry.getValue()});
+			   			}
+			                Map.Entry mp = (Map.Entry)i.next(); //Will run out of memory otherwise
 			            }
 			        }
 			        catch (IOException xIo) {
@@ -127,7 +126,6 @@ public class keatingSDLCAssignment {
 	 }
 
 	public static void main(String[] args) throws FileNotFoundException {
-		
 		new keatingSDLCAssignment().init();
 	}
 
